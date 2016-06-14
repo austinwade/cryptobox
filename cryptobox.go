@@ -10,23 +10,10 @@ import (
 func main() {
 	json := getJSONFromApi()
 
-	// todo, parse better
-	ethbtc := json[49:56]
-	ethusd := json[100:105]
+	ethusd, btcusd := getCryptoValues(json)
 
-	ethValue, err := strconv.Atoi(ethbtc)
-	if (err != nil) {return}
-
-	ethToBtc, err := strconv.Atoi(ethusd)
-	if (err != nil) {return}
-
-	btcValue := (ethValue / ethToBtc)
-
-	btcusd, err := strconv.Itoa(btcValue)
-
-	fmt.Printf("\n")
-	fmt.Printf("btc: " + btcusd + "\n")
-	fmt.Printf("eth: " + ethusd + "\n")
+	fmt.Println("btc: " + btcusd)
+	fmt.Println("eth: " + ethusd)
 }
 
 func getJSONFromApi() string {
@@ -41,4 +28,20 @@ func getJSONFromApi() string {
 
 	json := string(body[:])
 	return json
+}
+
+func getCryptoValues(json string) (string, string) {
+	// todo, parse better
+	ethbtc := json[49:56]
+	ethusd := json[100:105]
+
+	ethValue, _ := strconv.ParseFloat(ethusd, 32)
+
+	ethToBtc, _ := strconv.ParseFloat(ethbtc, 32)
+
+	btcValue := (ethValue / ethToBtc)
+
+	btcusd := strconv.FormatFloat(btcValue, 'f', 2, 32)
+
+	return ethusd, btcusd
 }
