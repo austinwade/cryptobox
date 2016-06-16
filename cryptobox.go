@@ -10,8 +10,6 @@ import (
 )
 
 func init() {
-    // This is needed to arrange that main() runs on main thread.
-    // See documentation for functions that are only allowed to be called from the main thread.
     runtime.LockOSThread()
 }
 
@@ -26,7 +24,7 @@ func main() {
     }
     defer glfw.Terminate()
 
-    window, err := glfw.CreateWindow(300, 75, "Testing", nil, nil)
+    window, err := glfw.CreateWindow(300, 75, "Cryptobox", nil, nil)
     if err != nil {
         panic(err)
     }
