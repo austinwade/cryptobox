@@ -9,33 +9,12 @@ import (
     "github.com/go-gl/glfw/v3.1/glfw"
 )
 
-func init() {
-    runtime.LockOSThread()
-}
-
 func main() {
 	json := getJSONFromApi()
 
 	ethusd, btcusd := getCryptoValues(json)
 
-	err := glfw.Init()
-    if err != nil {
-        panic(err)
-    }
-    defer glfw.Terminate()
-
-    window, err := glfw.CreateWindow(300, 75, "Cryptobox", nil, nil)
-    if err != nil {
-        panic(err)
-    }
-
-    window.MakeContextCurrent()
-
-    for !window.ShouldClose() {
-        // Do OpenGL stuff.
-        window.SwapBuffers()
-        glfw.PollEvents()
-    }
+    
 
 	fmt.Println("btc: " + btcusd)
 	fmt.Println("eth: " + ethusd)
