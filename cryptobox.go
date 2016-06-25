@@ -5,8 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	"runtime"
-    "github.com/go-gl/glfw/v3.1/glfw"
+	"github.com/amortaza/go-bellina"
 )
 
 func main() {
@@ -14,7 +13,7 @@ func main() {
 
 	ethusd, btcusd := getCryptoValues(json)
 
-    
+	bl.Start( 1024, 768, "Bellina v0.2", init_, tick, uninit )
 
 	fmt.Println("btc: " + btcusd)
 	fmt.Println("eth: " + ethusd)
