@@ -5,9 +5,16 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	"runtime"
-	"github.com/amortaza/go-bellina"
 )
+
+func main() {
+	json := getJSONFromApi()
+
+	ethusd, btcusd := getCryptoValues(json)
+
+	fmt.Println("btc: " + btcusd)
+	fmt.Println("eth: " + ethusd)
+}
 
 func getJSONFromApi() string {
 	var apiUrl string = "https://api.etherscan.io/api?module=stats&action=ethprice"
@@ -35,41 +42,4 @@ func getCryptoValues(json string) (string, string) {
 	btcusd := strconv.FormatFloat(btcValue, 'f', 2, 32)
 
 	return ethusd, btcusd
-}
-
-func tick() {
-
-	bl.Root()
-	{
-		bl.Pos(64,64)
-		bl.Dim(800,600)
-		bl.Color(.3,.5,.5)
-
-		bl.On("hover", func(i interface{}){
-			e := i.(*mouse_hover.Event)
-
-			if e.IsInEvent {
-			}
-		})
-
-	}
-	bl.End()
-}
-
-func uninit() {
-}
-
-func init_() {
-	runtime.LockOSThread()
-}
-
-func main() {
-	json := getJSONFromApi()
-
-	ethusd, btcusd := getCryptoValues(json)
-
-	bl.Start( 1024, 768, "Bellina v0.2", init_, tick, uninit )
-
-	fmt.Println("btc: " + btcusd)
-	fmt.Println("eth: " + ethusd)
 }
