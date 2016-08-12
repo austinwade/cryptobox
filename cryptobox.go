@@ -17,10 +17,10 @@ var premult bool
 func main() {
 	//json := getJSONFromApi()
 
-	ethusd, btcusd := "500.00", "20.00"//getCryptoValues(json)
+	ethusd, btcusd := 20.0, 600.00//getCryptoValues(json)
 
-	fmt.Println("btc: " + btcusd)
-	fmt.Println("eth: " + ethusd)
+	//fmt.Println("btc: " + btcusd)
+	//fmt.Println("eth: " + ethusd)
 
 	err := glfw.Init(gl.ContextWatcher)
 	if err != nil {
@@ -30,7 +30,7 @@ func main() {
 
 	glfw.WindowHint(glfw.Samples, 4)
 
-	window, err := glfw.CreateWindow(1000, 600, "NanoVGo", nil, nil)
+	window, err := glfw.CreateWindow(300, 200, "NanoVGo", nil, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -78,26 +78,18 @@ func main() {
 
 		ctx.BeginPath()
 
-		ctx.SetFontSize(150.0)
+		ctx.SetFontSize(36.0)
 		ctx.SetFontFace("sans")
 
 		ctx.SetTextAlign(nanovgo.AlignLeft | nanovgo.AlignMiddle)
 
-		ctx.SetFontBlur(1)
+		ctx.SetFontBlur(0)
 		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x+50,y+75, "BTC/USD" + btcusd)
+		ctx.Text(x,y, "BTC/USD: $" + strconv.FormatFloat(btcusd, 'f', 2, 64))
 
 		ctx.SetFontBlur(0)
 		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x+50,y+75, "BTC/USD" + btcusd)
-
-		ctx.SetFontBlur(1)
-		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x+50,y+275, "ETH/USD" + ethusd)
-
-		ctx.SetFontBlur(0)
-		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x+50,y+275, "ETH/USD" + ethusd)
+		ctx.Text(x,y+50, "ETH/USD: $" + strconv.FormatFloat(ethusd, 'f', 2, 64))
 
 		ctx.EndFrame()
 
