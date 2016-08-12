@@ -1,4 +1,4 @@
-package main//
+package main
 
 import (
 	"fmt"
@@ -13,6 +13,10 @@ import (
 
 var blowup bool
 var premult bool
+
+const (
+	IconBITCOIN       = 0xF15A
+)
 
 func main() {
 	//json := getJSONFromApi()
@@ -41,7 +45,7 @@ func main() {
 	defer ctx.Delete()
 
 	textFont := ctx.CreateFont("sans", "github.com/austinwade/cryptobox/Roboto-Regular.ttf")
-	iconFont := ctx.CreateFont("icons", "github.com/austinwade/cryptobox/minimal-icons.ttf")
+	iconFont := ctx.CreateFont("icon", "github.com/austinwade/cryptobox/fontawesome-webfont.ttf")
 
 	if textFont < 0 || iconFont < 0 {
 		panic("Could not find font")
@@ -61,11 +65,7 @@ func main() {
 		//mx, my := window.GetCursorPos()
 
 		gl.Viewport(0, 0, fbWidth, fbHeight)
-		if premult {
-			gl.ClearColor(0, 0, 0, 0)
-		} else {
-			gl.ClearColor(1, 1, 1, 1)
-		}
+		gl.ClearColor(1, 1, 1, 1)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
 		gl.Enable(gl.BLEND)
 		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -74,22 +74,11 @@ func main() {
 
 		ctx.BeginFrame(winWidth, winHeight, 1)
 
-		x, y := float32(30), float32(20)
-
 		ctx.BeginPath()
 
-		ctx.SetFontSize(36.0)
-		ctx.SetFontFace("sans")
+		drawCurrencyIcons(ctx)
 
-		ctx.SetTextAlign(nanovgo.AlignLeft | nanovgo.AlignMiddle)
-
-		ctx.SetFontBlur(0)
-		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x,y, "BTC/USD: $" + strconv.FormatFloat(btcusd, 'f', 2, 64))
-
-		ctx.SetFontBlur(0)
-		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x,y+50, "ETH/USD: $" + strconv.FormatFloat(ethusd, 'f', 2, 64))
+		drawCurrencyValues(ctx, btcusd, ethusd)
 
 		ctx.EndFrame()
 
@@ -97,6 +86,40 @@ func main() {
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
+}
+
+func cpToUTF8(cp int) string {
+	return string([]rune{rune(cp)})
+}
+
+func drawCurrencyValues(context *nanovgo.Context, btcUsd float64, ethUsd float64) {
+	x, y := float32(100), float32(100)
+
+	context.SetFontSize(36.0)
+	context.SetFontFace("sans")
+
+	context.SetTextAlign(nanovgo.AlignRight)
+
+	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+	context.Text(x,y, strconv.FormatFloat(btcUsd, 'f', 2, 64))
+
+	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+	context.Text(x,y+50, strconv.FormatFloat(ethUsd, 'f', 2, 64))
+}
+
+func drawCurrencyIcons(context *nanovgo.Context) {
+	x, y := float32(50), float32(100)
+
+	context.SetFontSize(36.0)
+	context.SetFontFace("icon")
+
+	context.SetTextAlign(nanovgo.AlignLeft)
+
+	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+	context.Text(x,y, cpToUTF8(IconBITCOIN))
+
+	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+	context.Text(x,y+50, "e")
 }
 
 func key(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
