@@ -17,7 +17,7 @@ var premult bool
 func main() {
 	//json := getJSONFromApi()
 
-	ethusd, btcusd := "1", "2"//getCryptoValues(json)
+	ethusd, btcusd := "500.00", "20.00"//getCryptoValues(json)
 
 	fmt.Println("btc: " + btcusd)
 	fmt.Println("eth: " + ethusd)
@@ -40,9 +40,10 @@ func main() {
 	ctx, err := nanovgo.NewContext(nanovgo.AntiAlias /*nanovgo.AntiAlias | nanovgo.StencilStrokes | nanovgo.Debug*/)
 	defer ctx.Delete()
 
-	font := ctx.CreateFont("sans", "github.com/austinwade/cryptobox/Roboto-Regular.ttf")
+	textFont := ctx.CreateFont("sans", "github.com/austinwade/cryptobox/Roboto-Regular.ttf")
+	iconFont := ctx.CreateFont("icons", "github.com/austinwade/cryptobox/minimal-icons.ttf")
 
-	if font < 0 {
+	if textFont < 0 || iconFont < 0 {
 		panic("Could not find font")
 	}
 
@@ -82,13 +83,21 @@ func main() {
 
 		ctx.SetTextAlign(nanovgo.AlignLeft | nanovgo.AlignMiddle)
 
-		ctx.SetFontBlur(2)
+		ctx.SetFontBlur(1)
 		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x+50,y+75, "$ " + ethusd)
+		ctx.Text(x+50,y+75, "BTC/USD" + btcusd)
 
 		ctx.SetFontBlur(0)
 		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-		ctx.Text(x+50,y+75, "$ " + btcusd)
+		ctx.Text(x+50,y+75, "BTC/USD" + btcusd)
+
+		ctx.SetFontBlur(1)
+		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+		ctx.Text(x+50,y+275, "ETH/USD" + ethusd)
+
+		ctx.SetFontBlur(0)
+		ctx.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+		ctx.Text(x+50,y+275, "ETH/USD" + ethusd)
 
 		ctx.EndFrame()
 
