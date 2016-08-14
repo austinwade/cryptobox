@@ -19,12 +19,12 @@ const (
 )
 
 func main() {
-	//json := getJSONFromApi()
+	json := getJSONFromApi()
 
-	ethusd, btcusd := 20.0, 600.00//getCryptoValues(json)
+	ethusd, btcusd := getCryptoValues(json)
 
-	//fmt.Println("btc: " + btcusd)
-	//fmt.Println("eth: " + ethusd)
+	fmt.Println("btc: " + btcusd)
+	fmt.Println("eth: " + ethusd)
 
 	err := glfw.Init(gl.ContextWatcher)
 	if err != nil {
@@ -92,7 +92,7 @@ func cpToUTF8(cp int) string {
 	return string([]rune{rune(cp)})
 }
 
-func drawCurrencyValues(context *nanovgo.Context, btcUsd float64, ethUsd float64) {
+func drawCurrencyValues(context *nanovgo.Context, btcUsd string, ethUsd string) {
 	x, y := float32(100), float32(100)
 
 	context.SetFontSize(36.0)
@@ -101,10 +101,10 @@ func drawCurrencyValues(context *nanovgo.Context, btcUsd float64, ethUsd float64
 	context.SetTextAlign(nanovgo.AlignRight)
 
 	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x,y, strconv.FormatFloat(btcUsd, 'f', 2, 64))
+	context.Text(x,y, btcUsd)
 
 	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x,y+50, strconv.FormatFloat(ethUsd, 'f', 2, 64))
+	context.Text(x,y+50, ethUsd)
 }
 
 func drawCurrencyIcons(context *nanovgo.Context) {
