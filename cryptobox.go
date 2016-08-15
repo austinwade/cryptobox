@@ -19,7 +19,7 @@ const (
 )
 
 func main() {
-	json := getJSONFromApi()
+	json := getApiJson()
 
 	ethusd, btcusd := getCryptoValues(json)
 
@@ -132,7 +132,7 @@ func key(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods gl
 	}
 }
 
-func getJSONFromApi() string {
+func getApiJson() string {
 	var apiUrl string = "http://api.etherscan.io/api?module=stats&action=ethprice"
 
     	resp, err := http.Get(apiUrl)
