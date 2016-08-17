@@ -44,11 +44,15 @@ func main() {
 	ctx, err := nanovgo.NewContext(nanovgo.AntiAlias /*nanovgo.AntiAlias | nanovgo.StencilStrokes | nanovgo.Debug*/)
 	defer ctx.Delete()
 
-	textFont := ctx.CreateFont("sans", "github.com/austinwade/cryptobox/Roboto-Regular.ttf")
-	iconFont := ctx.CreateFont("icon", "github.com/austinwade/cryptobox/fontawesome-webfont.ttf")
+	textFont := ctx.CreateFont("sans", "src/github.com/austinwade/cryptobox/Roboto-Regular.ttf")
+	iconFont := ctx.CreateFont("icon", "src/github.com/austinwade/cryptobox/fontawesome-webfont.ttf")
 
-	if textFont < 0 || iconFont < 0 {
-		panic("Could not find font")
+	if textFont < 0 {
+		panic("Could not find font1")
+	}
+
+	if iconFont < 0 {
+		panic("Could not find font2")
 	}
 
 	if err != nil {
@@ -76,7 +80,7 @@ func main() {
 
 		ctx.BeginPath()
 
-		drawCurrencyIcons(ctx)
+		//drawCurrencyIcons(ctx)
 
 		drawCurrencyValues(ctx, btcusd, ethusd)
 
@@ -104,7 +108,7 @@ func drawCurrencyValues(context *nanovgo.Context, btcUsd string, ethUsd string) 
 	context.Text(x,y, btcUsd)
 
 	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x,y+50, ethUsd)
+	context.Text(x + 100, y, ethUsd)
 }
 
 func drawCurrencyIcons(context *nanovgo.Context) {
@@ -119,7 +123,7 @@ func drawCurrencyIcons(context *nanovgo.Context) {
 	context.Text(x,y, cpToUTF8(IconBITCOIN))
 
 	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x,y+50, "e")
+	context.Text(x+100,y, "e")
 }
 
 func key(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
