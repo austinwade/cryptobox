@@ -12,54 +12,28 @@ import (
 )
 
 var blowup bool
-var premult bool
 
 const (
-	IconBITCOIN       = 0xF15A
+	sourcePath = "src/github.com/austinwade/cryptobox/"
+
+	apiUrl = "http://api.etherscan.io/api?module=stats&action=ethprice"
+
+	windowWidth = 300
+	windowHeight = 400
+
+	robotoRegularFileName = "Roboto-Regular.ttf"
+	fontAwesomeFileName = "fontawesome-webfont.ttf"
+
+	bitcoinIconId       = 0xF15A
 )
 
 func main() {
-	json := getApiJson()
+	etherValue, bitcoinValue := getCurrencyValues()
 
-	ethusd, btcusd := getCryptoValues(json)
+	window := initializeWindow()
+	context := initializeContext()
 
-	fmt.Println("btc: " + btcusd)
-	fmt.Println("eth: " + ethusd)
-
-	err := glfw.Init(gl.ContextWatcher)
-	if err != nil {
-		panic(err)
-	}
-	defer glfw.Terminate()
-
-	glfw.WindowHint(glfw.Samples, 4)
-
-	window, err := glfw.CreateWindow(300, 200, "NanoVGo", nil, nil)
-	if err != nil {
-		panic(err)
-	}
-	window.SetKeyCallback(key)
-	window.MakeContextCurrent()
-
-	ctx, err := nanovgo.NewContext(nanovgo.AntiAlias /*nanovgo.AntiAlias | nanovgo.StencilStrokes | nanovgo.Debug*/)
-	defer ctx.Delete()
-
-	textFont := ctx.CreateFont("sans", "src/github.com/austinwade/cryptobox/Roboto-Regular.ttf")
-	iconFont := ctx.CreateFont("icon", "src/github.com/austinwade/cryptobox/fontawesome-webfont.ttf")
-
-	if textFont < 0 {
-		panic("Could not find font1")
-	}
-
-	if iconFont < 0 {
-		panic("Could not find font2")
-	}
-
-	if err != nil {
-		panic(err)
-	}
-
-	glfw.SwapInterval(0)
+	startRenderLoop(window, context)
 
 	for !window.ShouldClose() {
 		//t, _ := fps.UpdateGraph()
@@ -89,7 +63,93 @@ func main() {
 		gl.Enable(gl.DEPTH_TEST)
 		window.SwapBuffers()
 		glfw.PollEvents()
+		glfw.SwapInterval(0)
 	}
+}
+
+func getCurrencyValues() (string, string) {
+	apiJson := getApiJson()
+
+	etherUsdValue := apiJson[100:105]
+	etherToBitcoin := apiJson[49:56]
+
+	etherToUsdFloat, _ := strconv.ParseFloat(etherUsdValue, 32)
+
+	etherToBitcoinFloat, _ := strconv.ParseFloat(etherToBitcoin, 32)
+
+	bitcoinUsdValue := (etherToUsdFloat / etherToBitcoinFloat)
+
+	bitcoinValue := strconv.FormatFloat(bitcoinUsdValue, 'f', 2, 32)
+
+	return etherUsdValue, bitcoinValue
+}
+
+func getApiJson() string {
+	resp, err := http.Get(apiUrl)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	json := string(body[:])
+	return json
+}
+
+func initializeWindow() *glfw.Window {
+	err := glfw.Init(gl.ContextWatcher)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer glfw.Terminate()
+
+	glfw.WindowHint(glfw.Samples, 4)
+
+	window, err := glfw.CreateWindow(windowWidth, windowHeight, "Cryptobox", nil, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	window.SetKeyCallback(key)
+	window.MakeContextCurrent()
+
+	return window
+}
+
+func initializeContext() *nanovgo.Context {
+	context, err := nanovgo.NewContext(nanovgo.AntiAlias)
+
+	defer context.Delete()
+
+	if err != nil {
+		panic(err)
+	}
+
+	createFonts(context)
+
+	return context
+}
+
+func createFonts(context *nanovgo.Context) {
+	textFont := context.CreateFont("sans", sourcePath + robotoRegularFileName)
+	iconFont := context.CreateFont("icon", sourcePath + fontAwesomeFileName)
+
+	if textFont < 0 {
+		panic("Could not find font: " + robotoRegularFileName)
+	}
+
+	if iconFont < 0 {
+		panic("Could not find font: " + fontAwesomeFileName)
+	}
+}
+
+func startRenderLoop(window *glfw.Window, context *nanovgo.Context) {
+
 }
 
 func cpToUTF8(cp int) string {
@@ -134,36 +194,4 @@ func key(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods gl
 	} else if key == glfw.KeyP && action == glfw.Press {
 		premult = !premult
 	}
-}
-
-func getApiJson() string {
-	var apiUrl string = "http://api.etherscan.io/api?module=stats&action=ethprice"
-
-    	resp, err := http.Get(apiUrl)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	json := string(body[:])
-	return json
-}
-
-func getCryptoValues(json string) (string, string) {
-	// todo, parse better
-	ethbtc := json[49:56]
-	ethusd := json[100:105]
-
-	ethValue, _ := strconv.ParseFloat(ethusd, 32)
-
-	ethToBtc, _ := strconv.ParseFloat(ethbtc, 32)
-
-	btcValue := (ethValue / ethToBtc)
-
-	btcusd := strconv.FormatFloat(btcValue, 'f', 2, 32)
-
-	return ethusd, btcusd
 }
