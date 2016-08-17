@@ -38,34 +38,7 @@ func main() {
 	window := buildWindow()
 	context := buildContext()
 
-	for !window.ShouldClose() {
-		fbWidth, fbHeight := window.GetFramebufferSize()
-		gl.Viewport(0, 0, fbWidth, fbHeight)
-		gl.ClearColor(1, 1, 1, 1)
-		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
-		gl.Enable(gl.BLEND)
-		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-		gl.Enable(gl.CULL_FACE)
-		gl.Disable(gl.DEPTH_TEST)
-
-		winWidth, winHeight := window.GetSize()
-		context.BeginFrame(winWidth, winHeight, 1)
-
-		context.BeginPath()
-
-		etherValue, bitcoinValue := getCurrencyValues()
-
-		//drawCurrencyIcons(ctx)
-
-		drawCurrencyValues(context, etherValue, bitcoinValue)
-
-		context.EndFrame()
-
-		gl.Enable(gl.DEPTH_TEST)
-		window.SwapBuffers()
-		glfw.PollEvents()
-		glfw.SwapInterval(0)
-	}
+	render(window, context)
 }
 
 func getCurrencyValues() (string, string) {
@@ -136,8 +109,40 @@ func createFonts(context *nanovgo.Context) {
 	}
 }
 
-func startRenderLoop(window *glfw.Window, context *nanovgo.Context) {
+func render(window *glfw.Window, context *nanovgo.Context) {
 
+	for !window.ShouldClose() {
+		wipeWindow()
+
+		context.BeginFrame(windowWidth, windowHeight, 1)
+
+		context.BeginPath()
+
+		etherValue, bitcoinValue := getCurrencyValues()
+
+		//drawCurrencyIcons(ctx)
+
+		drawCurrencyValues(context, etherValue, bitcoinValue)
+
+		context.EndFrame()
+
+		gl.Enable(gl.DEPTH_TEST)
+		window.SwapBuffers()
+		glfw.PollEvents()
+		glfw.SwapInterval(0)
+	}
+}
+
+func wipeWindow() {
+	fbWidth, fbHeight := window.GetFramebufferSize()
+
+	gl.Viewport(0, 0, fbWidth, fbHeight)
+	gl.ClearColor(1, 1, 1, 1)
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
+	gl.Enable(gl.BLEND)
+	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+	gl.Enable(gl.CULL_FACE)
+	gl.Disable(gl.DEPTH_TEST)
 }
 
 func cpToUTF8(cp int) string {
