@@ -12,6 +12,7 @@ import (
 )
 
 var blowup bool
+var premult bool
 
 const (
 	sourcePath = "src/github.com/austinwade/cryptobox/"
@@ -28,16 +29,17 @@ const (
 )
 
 func main() {
-	window := initializeWindow()
-	context := initializeContext()
+	err := glfw.Init(gl.ContextWatcher)
+
+	if err != nil {
+		panic(err)
+	}
+
+	window := buildWindow()
+	context := buildContext()
 
 	for !window.ShouldClose() {
-		//t, _ := fps.UpdateGraph()
-
 		fbWidth, fbHeight := window.GetFramebufferSize()
-		winWidth, winHeight := window.GetSize()
-		//mx, my := window.GetCursorPos()
-
 		gl.Viewport(0, 0, fbWidth, fbHeight)
 		gl.ClearColor(1, 1, 1, 1)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
@@ -46,6 +48,7 @@ func main() {
 		gl.Enable(gl.CULL_FACE)
 		gl.Disable(gl.DEPTH_TEST)
 
+		winWidth, winHeight := window.GetSize()
 		context.BeginFrame(winWidth, winHeight, 1)
 
 		context.BeginPath()
@@ -54,7 +57,7 @@ func main() {
 
 		//drawCurrencyIcons(ctx)
 
-		drawCurrencyValues(context, btcusd, ethusd)
+		drawCurrencyValues(context, etherValue, bitcoinValue)
 
 		context.EndFrame()
 
@@ -84,7 +87,6 @@ func getCurrencyValues() (string, string) {
 
 func getApiJson() string {
 	resp, err := http.Get(apiUrl)
-
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -94,20 +96,11 @@ func getApiJson() string {
 	body, _ := ioutil.ReadAll(resp.Body)
 
 	json := string(body[:])
+
 	return json
 }
 
-func initializeWindow() *glfw.Window {
-	err := glfw.Init(gl.ContextWatcher)
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer glfw.Terminate()
-
-	glfw.WindowHint(glfw.Samples, 4)
-
+func buildWindow() *glfw.Window {
 	window, err := glfw.CreateWindow(windowWidth, windowHeight, "Cryptobox", nil, nil)
 	if err != nil {
 		panic(err)
@@ -119,11 +112,8 @@ func initializeWindow() *glfw.Window {
 	return window
 }
 
-func initializeContext() *nanovgo.Context {
+func buildContext() *nanovgo.Context {
 	context, err := nanovgo.NewContext(nanovgo.AntiAlias)
-
-	defer context.Delete()
-
 	if err != nil {
 		panic(err)
 	}
@@ -178,7 +168,7 @@ func drawCurrencyIcons(context *nanovgo.Context) {
 	context.SetTextAlign(nanovgo.AlignLeft)
 
 	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x,y, cpToUTF8(IconBITCOIN))
+	context.Text(x,y, cpToUTF8(bitcoinIconId))
 
 	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
 	context.Text(x+100,y, "e")
