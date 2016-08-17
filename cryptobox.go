@@ -28,12 +28,8 @@ const (
 )
 
 func main() {
-	etherValue, bitcoinValue := getCurrencyValues()
-
 	window := initializeWindow()
 	context := initializeContext()
-
-	startRenderLoop(window, context)
 
 	for !window.ShouldClose() {
 		//t, _ := fps.UpdateGraph()
@@ -50,15 +46,17 @@ func main() {
 		gl.Enable(gl.CULL_FACE)
 		gl.Disable(gl.DEPTH_TEST)
 
-		ctx.BeginFrame(winWidth, winHeight, 1)
+		context.BeginFrame(winWidth, winHeight, 1)
 
-		ctx.BeginPath()
+		context.BeginPath()
+
+		etherValue, bitcoinValue := getCurrencyValues()
 
 		//drawCurrencyIcons(ctx)
 
-		drawCurrencyValues(ctx, btcusd, ethusd)
+		drawCurrencyValues(context, btcusd, ethusd)
 
-		ctx.EndFrame()
+		context.EndFrame()
 
 		gl.Enable(gl.DEPTH_TEST)
 		window.SwapBuffers()
