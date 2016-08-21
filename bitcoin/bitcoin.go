@@ -3,12 +3,13 @@ package bitcoin
 import (
 	"strconv"
 	"fmt"
+	"net/http"
 	"io/ioutil"
 )
 
 const apiUrl = "http://api.etherscan.io/api?module=stats&action=ethprice"
 
-func getCurrencyValues() (string, string) {
+func GetCurrencyValues() (string, string) {
 	apiJson := getApiJson()
 
 	etherUsdValue := apiJson[100:105]

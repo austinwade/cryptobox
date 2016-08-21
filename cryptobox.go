@@ -5,6 +5,7 @@ import (
 	"github.com/goxjs/glfw"
 	"github.com/austinwade/cryptobox/renderer"
 	"runtime"
+	"github.com/austinwade/cryptobox/bitcoin"
 )
 
 var blowup bool
@@ -43,7 +44,7 @@ func loop(window *glfw.Window) {
 
 	for !window.ShouldClose() {
 
-		etherValue, bitcoinValue := "4,322.00", "3,444.33" //bitcoin.GetCurrencyValues()
+		etherValue, bitcoinValue := bitcoin.GetCurrencyValues()
 
 		renderer.Draw(window, etherValue, bitcoinValue)
 
