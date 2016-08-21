@@ -12,8 +12,7 @@ const apiUrl = "http://api.etherscan.io/api?module=stats&action=ethprice"
 func GetCurrencyValues() (string, string) {
 	apiJson := getApiJson()
 
-	etherUsdValue := apiJson[100:105]
-	etherToBitcoin := apiJson[49:56]
+	etherUsdValue, etherToBitcoin := parseJson(apiJson)
 
 	etherToUsdFloat, _ := strconv.ParseFloat(etherUsdValue, 32)
 
@@ -39,5 +38,12 @@ func getApiJson() string {
 	json := string(body[:])
 
 	return json
+}
+
+func parseJson(json string) (eth string, btc string) {
+	etherUsdValue := json[100:105]
+	etherToBitcoin := json[49:56]
+
+	return etherUsdValue, etherToBitcoin
 }
 
