@@ -7,7 +7,8 @@ import ("github.com/goxjs/gl"
 const (	bitcoinIconId       = 0xF15A
 	sourcePath = "src/github.com/austinwade/cryptobox/"
 	robotoRegularFileName = "Roboto-Regular.ttf"
-	fontAwesomeFileName = "fontawesome-webfont.ttf")
+	fontAwesomeFileName = "fontawesome-webfont.ttf"
+)
 
 var windowWidth, windowHeight int
 var context *nanovgo.Context
