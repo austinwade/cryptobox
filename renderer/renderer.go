@@ -49,7 +49,7 @@ func wipeWindow(window *glfw.Window) {
 	windowWidth, windowHeight = fbWidth, fbHeight
 
 	gl.Viewport(0, 0, fbWidth, fbHeight)
-	gl.ClearColor(0.22, 0.24, 0.24, 1)
+	gl.ClearColor(0.16, 0.17, 0.17, 1)
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -65,15 +65,25 @@ func drawCurrencyValues(context *nanovgo.Context, btcUsd string, ethUsd string) 
 	x, y := float32(100), float32(40)
 
 	context.BeginPath()
-	context.SetFontSize(36.0)
+	context.SetFontSize(50.0)
 	context.SetFontFace("sans")
 
-	context.SetTextAlign(nanovgo.AlignRight)
+	context.SetFontBlur(1.0)
+	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+	context.Text(x, y, btcUsd)
 
-	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 255))
-	context.Text(x,y, btcUsd)
+	context.SetFontBlur(0.0)
+	//ctx.SetFillColor(vgoRGBA(255, 255, 255, 170))
+	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 250))
+	context.Text(x, y, btcUsd)
 
-	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 255))
+	context.SetFontBlur(1.0)
+	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
+	context.Text(x + 100, y, ethUsd)
+
+	context.SetFontBlur(0.0)
+	//ctx.SetFillColor(vgoRGBA(255, 255, 255, 170))
+	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 250))
 	context.Text(x + 100, y, ethUsd)
 }
 
