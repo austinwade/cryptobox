@@ -12,8 +12,8 @@ var blowup bool
 var premult bool
 
 const (
-	windowWidth = 300
-	windowHeight = 400
+	windowWidth = 1950
+	windowHeight = 70
 )
 
 func init() {
