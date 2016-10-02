@@ -3,19 +3,28 @@ package renderer
 import ("github.com/goxjs/gl"
 	"github.com/goxjs/glfw"
 	"github.com/shibukawa/nanovgo"
-	"container/list"
 )
 
 var windowWidth int
 var windowHeight int
 var context *nanovgo.Context
 
-func Init(width, height int ) {
+func Init(width, height int) {
 	context, _ = nanovgo.NewContext(nanovgo.AntiAlias)
 
 	createFont(context)
 
 	windowWidth, windowHeight = width, height
+}
+
+func Draw(window *glfw.Window, coinStats string) {
+	wipeWindow(window)
+
+	context.BeginFrame(windowWidth, windowHeight, 1)
+
+	drawStats(context, coinStats)
+
+	context.EndFrame()
 }
 
 func createFont(context *nanovgo.Context) {
@@ -27,21 +36,6 @@ func createFont(context *nanovgo.Context) {
 	if textFont < 0 {
 		panic("Could not find font: " + robotoRegularFileName)
 	}
-}
-
-func Draw(window *glfw.Window, currencyValues list) {
-	wipeWindow(window)
-
-	context.BeginFrame(windowWidth, windowHeight, 1)
-
-	queuePosition := 0
-	for value := currencyValues.Front(); value != nil; value = value.Next() {
-
-		drawValue(context, queuePosition, value)
-		queuePosition++
-	}
-
-	context.EndFrame()
 }
 
 func wipeWindow(window *glfw.Window) {
@@ -57,12 +51,8 @@ func wipeWindow(window *glfw.Window) {
 	gl.Disable(gl.DEPTH_TEST)
 }
 
-func cpToUTF8(cp int) string {
-	return string([]rune{rune(cp)})
-}
-
-func drawValue(context *nanovgo.Context, index int, value string) {
-	x, y := float32(100), float32(40)
+func drawStats(context *nanovgo.Context, coinStats string) {
+	x, y := float32(100), float32(45)
 
 	context.BeginPath()
 	context.SetFontSize(50.0)
@@ -70,38 +60,9 @@ func drawValue(context *nanovgo.Context, index int, value string) {
 
 	context.SetFontBlur(1.0)
 	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x, y, btcUsd)
+	context.Text(x, y, coinStats)
 
 	context.SetFontBlur(0.0)
 	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 250))
-	context.Text(x, y, btcUsd)
-
-	context.SetFontBlur(1.0)
-	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x + 100, y, ethUsd)
-
-	context.SetFontBlur(0.0)
-	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 250))
-	context.Text(x + 100, y, ethUsd)
+	context.Text(x, y, coinStats)
 }
-
-func drawCurrencyIcons(context *nanovgo.Context) {
-	x, y := float32(50), float32(100)
-
-	context.SetFontSize(36.0)
-	context.SetFontFace("icon")
-
-	context.SetTextAlign(nanovgo.AlignLeft)
-
-	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x,y, cpToUTF8(bitcoinIconId))
-
-	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x+100,y, "e")
-}
-
-
-
-
-
-

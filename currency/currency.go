@@ -1,31 +1,29 @@
 package currency
 
 import (
-	"strconv"
 	"fmt"
 	"net/http"
 	"io/ioutil"
 )
 
-const apiUrl = "http://api.etherscan.io/api?module=stats&action=ethprice"
+const apiUrl = "https://poloniex.com/public?command=returnTicker"
 
-func GetCurrencyValues() (string, string) {
-	apiJson := getApiJson()
+var CoinStats string
 
-	etherUsdValue, etherToBitcoin := parseJson(apiJson)
-
-	etherToUsdFloat, _ := strconv.ParseFloat(etherUsdValue, 32)
-
-	etherToBitcoinFloat, _ := strconv.ParseFloat(etherToBitcoin, 32)
-
-	bitcoinUsdValue := (etherToUsdFloat / etherToBitcoinFloat)
-
-	bitcoinValue := strconv.FormatFloat(bitcoinUsdValue, 'f', 2, 32)
-
-	return etherUsdValue, bitcoinValue
+func init() {
+	UpdateCoinStats()
 }
 
-func getApiJson() string {
+func UpdateCoinStats() {
+	CoinStats = CoinStats + "a"
+	//coinStatsJson := callPoloniexApi()
+	//
+	//formattedStatsString := getStatsString(coinStatsJson)
+	//
+	//CoinStats = formattedStatsString
+}
+
+func callPoloniexApi() string {
 	resp, err := http.Get(apiUrl)
 	if err != nil {
 		fmt.Println(err)
@@ -40,10 +38,8 @@ func getApiJson() string {
 	return json
 }
 
-func parseJson(json string) (eth string, btc string) {
-	etherUsdValue := json[100:105]
-	etherToBitcoin := json[49:56]
+func getStatsString(json string) (statsString string) {
 
-	return etherUsdValue, etherToBitcoin
+	return "foo"
 }
 

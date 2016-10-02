@@ -6,6 +6,8 @@ import (
 	"runtime"
 	"github.com/austinwade/cryptobox/currency"
 	"github.com/austinwade/cryptobox/renderer"
+	"time"
+	"fmt"
 )
 
 var blowup bool
@@ -21,6 +23,12 @@ func init() {
 }
 
 func main() {
+	window := initializeWindow()
+
+	loop(window)
+}
+
+func initializeWindow() (*glfw.Window) {
 	err := glfw.Init(gl.ContextWatcher)
 
 	if err != nil {
@@ -36,27 +44,39 @@ func main() {
 
 	glfw.SwapInterval(0)
 
-	loop(window)
+	return window
 }
-
 
 func loop(window *glfw.Window) {
 
+	currency.UpdateCoinStats()
+	coinStats := currency.CoinStats
+	statsLastUpdated := time.Now()
+
 	for !window.ShouldClose() {
 
-		currencyValues := currency.GetCoinValues()
+		if hasOneMinutePassed(statsLastUpdated) {
+			currency.UpdateCoinStats()
+			statsLastUpdated = time.Now()
+			coinStats = currency.CoinStats
+			fmt.Println(currency.CoinStats)
+		}
 
-		renderValues(window, currencyValues)
-
-		renderer.Draw(window, currencyValues)
+		renderer.Draw(window, coinStats)
 
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
 }
 
-func renderValues(window *glfw.Window, currencyValues list) {
+func hasOneMinutePassed(timeToTest time.Time) (bool) {
+	oneMinuteLater := timeToTest.Add(time.Second)
 
+	if (oneMinuteLater.Before(time.Now())) {
+		return true
+	}
+
+	return false
 }
 
 func key(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
