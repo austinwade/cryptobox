@@ -1,4 +1,4 @@
-package bitcoin
+package currency
 
 import (
 	"strconv"

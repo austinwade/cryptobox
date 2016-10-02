@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/goxjs/gl"
 	"github.com/goxjs/glfw"
-	"github.com/austinwade/cryptobox/renderer"
 	"runtime"
-	"gx/ipfs/Qmaau1d1WjnQdTYfRYfFVsCS97cgD8ATyrKuNoEfexL7JZ/go-text/currency"
+	"github.com/austinwade/cryptobox/currency"
+	"github.com/austinwade/cryptobox/renderer"
 )
 
 var blowup bool

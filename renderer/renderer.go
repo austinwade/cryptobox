@@ -6,11 +6,6 @@ import ("github.com/goxjs/gl"
 	"container/list"
 )
 
-const (	bitcoinIconId      	= 0xF15A
-	sourcePath 		= "src/github.com/austinwade/cryptobox/"
-	robotoRegularFileName	= "Roboto-Regular.ttf"
-)
-
 var windowWidth int
 var windowHeight int
 var context *nanovgo.Context
@@ -24,6 +19,9 @@ func Init(width, height int ) {
 }
 
 func createFont(context *nanovgo.Context) {
+	sourcePath := "src/github.com/austinwade/cryptobox/"
+	robotoRegularFileName := "Roboto-Regular.ttf"
+
 	textFont := context.CreateFont("sans", sourcePath + robotoRegularFileName)
 
 	if textFont < 0 {
