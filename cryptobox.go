@@ -5,7 +5,7 @@ import (
 	"github.com/goxjs/glfw"
 	"github.com/austinwade/cryptobox/renderer"
 	"runtime"
-	"github.com/austinwade/cryptobox/bitcoin"
+	"gx/ipfs/Qmaau1d1WjnQdTYfRYfFVsCS97cgD8ATyrKuNoEfexL7JZ/go-text/currency"
 )
 
 var blowup bool
@@ -44,13 +44,19 @@ func loop(window *glfw.Window) {
 
 	for !window.ShouldClose() {
 
-		etherValue, bitcoinValue := bitcoin.GetCurrencyValues()
+		currencyValues := currency.GetCoinValues()
 
-		renderer.Draw(window, etherValue, bitcoinValue)
+		renderValues(window, currencyValues)
+
+		renderer.Draw(window, currencyValues)
 
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
+}
+
+func renderValues(window *glfw.Window, currencyValues list) {
+
 }
 
 func key(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
