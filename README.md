@@ -1,2 +1,2 @@
 # Cryptobox
-A minimal realtime bitcoin and ether value widget written in Go.
+A realtime cryptocurrency value dashboard written in Go.
