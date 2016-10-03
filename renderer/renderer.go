@@ -4,11 +4,13 @@ import ("github.com/goxjs/gl"
 	"github.com/goxjs/glfw"
 	"github.com/shibukawa/nanovgo"
 	"github.com/austinwade/cryptobox/currency"
+	"strconv"
 )
 
 var windowWidth int
 var windowHeight int
 var context *nanovgo.Context
+var marqueePosition = 2000.0
 
 func Init(width, height int) {
 	context, _ = nanovgo.NewContext(nanovgo.AntiAlias)
@@ -24,6 +26,8 @@ func Draw(window *glfw.Window, marketStats currency.Market) {
 	context.BeginFrame(windowWidth, windowHeight, 1)
 
 	drawStats(context, marketStats)
+
+	marqueePosition -= 0.2
 
 	context.EndFrame()
 }
@@ -53,21 +57,69 @@ func wipeWindow(window *glfw.Window) {
 }
 
 func drawStats(context *nanovgo.Context, marketStats currency.Market) {
-	x, y := float32(100), float32(50)
+	initFont()
 
+	white := nanovgo.RGB(255, 255, 255)
+
+	keys := [3]string{"BTC", "ETH", "XMR"}
+
+	queuePosition := float32(0.0)
+	for _, key := range keys {
+		x := float32(marqueePosition) + (queuePosition * 500.0)
+
+		drawText(key, x, white)
+		drawValue(marketStats[key].UsDollarValue, x + 100, white)
+		drawPercentChange(marketStats[key].PercentChange, x + 325)
+
+		queuePosition += 1.0
+	}
+}
+
+func initFont() {
 	context.BeginPath()
 	context.SetFontSize(50.0)
 	context.SetFontFace("sans")
-
-	drawText(x, y, marketStats["BTC"].UsDollarValue)
 }
 
-func drawText(x float32, y float32, text string) {
+func drawText(text string, x float32, color nanovgo.Color) {
+	y := float32(50)
+
 	context.SetFontBlur(1.0)
-	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 255))
+	context.SetFillColor(color)
 	context.Text(x, y, text)
 
 	context.SetFontBlur(0.0)
-	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 250))
+	context.SetFillColor(color)
 	context.Text(x, y, text)
+}
+
+func drawValue(value float64, x float32, color nanovgo.Color) {
+	// Truncate, leaving only 4 decimal places
+	//float, _ := strconv.ParseFloat(value, 64)
+
+	valueStr := strconv.FormatFloat(value, 'G', 7, 64)
+
+	valueStr = "$" + valueStr
+
+	drawText(valueStr, x, color)
+}
+
+func drawPercentChange(percent float64, x float32) {
+	// Truncate, leaving only 4 decimal places
+	//float, _ := strconv.ParseFloat(percent, 32)
+
+	// Make the percent out of 100 instead of 1
+	percent = percent * 100
+
+	percentStr := strconv.FormatFloat(percent, 'f', 2, 32)
+
+	if (percent >= 0) {
+		percentStr = "+" + percentStr + "%"
+		green := nanovgo.RGB(23, 151, 85)
+		drawText(percentStr, x, green)
+	} else {
+		percentStr = "-" + percentStr + "%"
+		red := nanovgo.RGB(217, 71, 85)
+		drawText(percentStr, x, red)
+	}
 }

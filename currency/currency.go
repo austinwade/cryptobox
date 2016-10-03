@@ -10,8 +10,8 @@ import (
 const apiUrl = "https://poloniex.com/public?command=returnTicker"
 
 type MarketProperties struct{
-	UsDollarValue string
-	PercentChange string
+	UsDollarValue float64
+	PercentChange float64
 }
 
 type Market map[string] MarketProperties
@@ -63,8 +63,8 @@ func getStatsMap(jsonParsed *gabs.Container) (marketStats Market) {
 
 func getStats(jsonParsed *gabs.Container, market string) (currencyStats MarketProperties) {
 	currencyStats = MarketProperties {
-		UsDollarValue: jsonParsed.Path(market + ".last").Data().(string),
-		PercentChange: jsonParsed.Path(market + ".percentChange").Data().(string),
+		UsDollarValue: jsonParsed.Path(market + ".last").Data().(float64),
+		PercentChange: jsonParsed.Path(market + ".percentChange").Data().(float64),
 	}
 
 	return currencyStats
