@@ -50,7 +50,7 @@ func initializeWindow() (*glfw.Window) {
 func loop(window *glfw.Window) {
 
 	currency.UpdateCoinStats()
-	coinStats := currency.CoinStats
+	coinStats := currency.MarketStats
 	statsLastUpdated := time.Now()
 
 	for !window.ShouldClose() {
@@ -58,8 +58,8 @@ func loop(window *glfw.Window) {
 		if hasOneMinutePassed(statsLastUpdated) {
 			currency.UpdateCoinStats()
 			statsLastUpdated = time.Now()
-			coinStats = currency.CoinStats
-			fmt.Println(currency.CoinStats)
+			coinStats = currency.MarketStats
+			fmt.Println(currency.MarketStats)
 		}
 
 		renderer.Draw(window, coinStats)
@@ -70,7 +70,7 @@ func loop(window *glfw.Window) {
 }
 
 func hasOneMinutePassed(timeToTest time.Time) (bool) {
-	oneMinuteLater := timeToTest.Add(time.Second)
+	oneMinuteLater := timeToTest.Add(time.Minute)
 
 	if (oneMinuteLater.Before(time.Now())) {
 		return true
