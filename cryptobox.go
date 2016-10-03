@@ -7,7 +7,6 @@ import (
 	"github.com/austinwade/cryptobox/currency"
 	"github.com/austinwade/cryptobox/renderer"
 	"time"
-	"fmt"
 )
 
 var blowup bool
@@ -49,20 +48,18 @@ func initializeWindow() (*glfw.Window) {
 
 func loop(window *glfw.Window) {
 
-	currency.UpdateCoinStats()
-	coinStats := currency.MarketStats
+	marketStats := currency.MarketStats
 	statsLastUpdated := time.Now()
 
 	for !window.ShouldClose() {
 
 		if hasOneMinutePassed(statsLastUpdated) {
-			currency.UpdateCoinStats()
+			currency.UpdateMarketStats()
 			statsLastUpdated = time.Now()
-			coinStats = currency.MarketStats
-			fmt.Println(currency.MarketStats)
+			marketStats = currency.MarketStats
 		}
 
-		renderer.Draw(window, coinStats)
+		renderer.Draw(window, marketStats)
 
 		window.SwapBuffers()
 		glfw.PollEvents()

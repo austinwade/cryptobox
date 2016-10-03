@@ -3,6 +3,7 @@ package renderer
 import ("github.com/goxjs/gl"
 	"github.com/goxjs/glfw"
 	"github.com/shibukawa/nanovgo"
+	"github.com/austinwade/cryptobox/currency"
 )
 
 var windowWidth int
@@ -17,19 +18,19 @@ func Init(width, height int) {
 	windowWidth, windowHeight = width, height
 }
 
-func Draw(window *glfw.Window, coinStats string) {
+func Draw(window *glfw.Window, marketStats currency.Market) {
 	wipeWindow(window)
 
 	context.BeginFrame(windowWidth, windowHeight, 1)
 
-	drawStats(context, coinStats)
+	drawStats(context, marketStats)
 
 	context.EndFrame()
 }
 
 func createFont(context *nanovgo.Context) {
 	sourcePath := "src/github.com/austinwade/cryptobox/"
-	robotoRegularFileName := "Roboto-Regular.ttf"
+	robotoRegularFileName := "Roboto-Medium.ttf"
 
 	textFont := context.CreateFont("sans", sourcePath + robotoRegularFileName)
 
@@ -51,18 +52,22 @@ func wipeWindow(window *glfw.Window) {
 	gl.Disable(gl.DEPTH_TEST)
 }
 
-func drawStats(context *nanovgo.Context, coinStats string) {
-	x, y := float32(100), float32(45)
+func drawStats(context *nanovgo.Context, marketStats currency.Market) {
+	x, y := float32(100), float32(50)
 
 	context.BeginPath()
 	context.SetFontSize(50.0)
 	context.SetFontFace("sans")
 
+	drawText(x, y, marketStats["BTC"].UsDollarValue)
+}
+
+func drawText(x float32, y float32, text string) {
 	context.SetFontBlur(1.0)
-	context.SetFillColor(nanovgo.RGBA(0, 0, 0, 255))
-	context.Text(x, y, coinStats)
+	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 255))
+	context.Text(x, y, text)
 
 	context.SetFontBlur(0.0)
 	context.SetFillColor(nanovgo.RGBA(255, 255, 255, 250))
-	context.Text(x, y, coinStats)
+	context.Text(x, y, text)
 }

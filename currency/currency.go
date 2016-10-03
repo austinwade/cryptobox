@@ -5,26 +5,24 @@ import (
 	"net/http"
 	"io/ioutil"
 	"github.com/Jeffail/gabs"
-	//"strconv"
-	"strconv"
 )
 
 const apiUrl = "https://poloniex.com/public?command=returnTicker"
 
-type stats struct{
-	usDollarValue string
-	percentChange float32
+type MarketProperties struct{
+	UsDollarValue string
+	PercentChange string
 }
 
-type MarketStats map[string] stats
+type Market map[string] MarketProperties
 
-var MarketStats MarketStats
+var MarketStats Market
 
 func init() {
-	UpdateCoinStats()
+	UpdateMarketStats()
 }
 
-func UpdateCoinStats() {
+func UpdateMarketStats() {
 	rawApiJson := []byte(callPoloniexApi())
 
 	jsonParsed, _ := gabs.ParseJSON(rawApiJson)
@@ -49,35 +47,25 @@ func callPoloniexApi() string {
 	return json
 }
 
-func getStatsMap(jsonParsed *gabs.Container) (statsMap MarketStats) {
+func getStatsMap(jsonParsed *gabs.Container) (marketStats Market) {
 	btcStats := getStats(jsonParsed, "USDT_BTC")
 	ethStats := getStats(jsonParsed, "USDT_ETH")
 	xmrStats := getStats(jsonParsed, "USDT_XMR")
 
-	statsMap["BTC"] = btcStats
-	statsMap["ETH"] = ethStats
-	statsMap["XMR"] = xmrStats
+	marketStats = Market{}
 
-	return statsMap
+	marketStats["BTC"] = btcStats
+	marketStats["ETH"] = ethStats
+	marketStats["XMR"] = xmrStats
+
+	return marketStats
 }
 
-func getStats(jsonParsed *gabs.Container, market string) (currencyStats stats) {
-	currencyStats = stats {
-		usDollarValue: jsonParsed.Path(market + ".last").Data().(string),
-		percentChange: getPercentChange(jsonParsed, market),
+func getStats(jsonParsed *gabs.Container, market string) (currencyStats MarketProperties) {
+	currencyStats = MarketProperties {
+		UsDollarValue: jsonParsed.Path(market + ".last").Data().(string),
+		PercentChange: jsonParsed.Path(market + ".percentChange").Data().(string),
 	}
 
 	return currencyStats
 }
-
-func getPercentChange(jsonParsed *gabs.Container, market string) (value float64) {
-	// Parsing as float32 using "gabs" does not work correctly, so we must go
-	// from string, to float32, back to string
-	rawString, _ := jsonParsed.Path(market + ".percentChange").Data().(string)
-
-	float, _ := strconv.ParseFloat(rawString, 32)
-	value = strconv.FormatFloat(float, 'f', 4, 32)
-
-	return value
-}
-
