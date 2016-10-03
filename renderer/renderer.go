@@ -67,6 +67,8 @@ func drawStats(context *nanovgo.Context, marketStats currency.Market) {
 	for _, key := range keys {
 		x := float32(marqueePosition) + (queuePosition * 500.0)
 
+		//fmt.Println(key + ": "+ marketStats[key].UsDollarValue)
+
 		drawText(key, x, white)
 		drawValue(marketStats[key].UsDollarValue, x + 100, white)
 		drawPercentChange(marketStats[key].PercentChange, x + 325)
@@ -93,33 +95,40 @@ func drawText(text string, x float32, color nanovgo.Color) {
 	context.Text(x, y, text)
 }
 
-func drawValue(value float64, x float32, color nanovgo.Color) {
+func drawValue(value string, x float32, color nanovgo.Color) {
 	// Truncate, leaving only 4 decimal places
-	//float, _ := strconv.ParseFloat(value, 64)
+	float, _ := strconv.ParseFloat(value, 64)
 
-	valueStr := strconv.FormatFloat(value, 'G', 7, 64)
+	valueStr := strconv.FormatFloat(float, 'g', 7, 64)
+
+	totalDigits := len(valueStr)
+	if (totalDigits != 8) {
+		for i := 0; i < (8-totalDigits); i++  {
+			valueStr += "0"
+		}
+	}
 
 	valueStr = "$" + valueStr
 
 	drawText(valueStr, x, color)
 }
 
-func drawPercentChange(percent float64, x float32) {
+func drawPercentChange(percent string, x float32) {
 	// Truncate, leaving only 4 decimal places
-	//float, _ := strconv.ParseFloat(percent, 32)
+	float, _ := strconv.ParseFloat(percent, 32)
 
 	// Make the percent out of 100 instead of 1
-	percent = percent * 100
+	float = float * 100
 
-	percentStr := strconv.FormatFloat(percent, 'f', 2, 32)
+	percent = strconv.FormatFloat(float, 'f', 2, 32)
 
-	if (percent >= 0) {
-		percentStr = "+" + percentStr + "%"
+	if (float >= 0) {
+		percent = "+" + percent + "%"
 		green := nanovgo.RGB(23, 151, 85)
-		drawText(percentStr, x, green)
+		drawText(percent, x, green)
 	} else {
-		percentStr = "-" + percentStr + "%"
+		percent = percent + "%"
 		red := nanovgo.RGB(217, 71, 85)
-		drawText(percentStr, x, red)
+		drawText(percent, x, red)
 	}
 }
