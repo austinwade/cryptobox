@@ -51,12 +51,16 @@ func getStatsMap(jsonParsed *gabs.Container) (marketStats Market) {
 	btcStats := getStats(jsonParsed, "USDT_BTC")
 	ethStats := getStats(jsonParsed, "USDT_ETH")
 	xmrStats := getStats(jsonParsed, "USDT_XMR")
+	dashStats := getStats(jsonParsed, "USDT_DASH")
+	ltcStats := getStats(jsonParsed, "USDT_LTC")
 
 	marketStats = Market{}
 
 	marketStats["BTC"] = btcStats
 	marketStats["ETH"] = ethStats
 	marketStats["XMR"] = xmrStats
+	marketStats["DSH"] = dashStats
+	marketStats["LTC"] = ltcStats
 
 	return marketStats
 }
