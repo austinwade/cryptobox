@@ -64,8 +64,8 @@ func Draw(window *glfw.Window, marketStats currency.Market) {
 	drawStats(marketStats, marqueePositionOne)
 	drawStats(marketStats, marqueePositionTwo)
 
-	marqueePositionOne -= 2
-	marqueePositionTwo -= 2
+	marqueePositionOne -= 0.25
+	marqueePositionTwo -= 0.25
 
 	if (marqueePositionOne < -3250) {
 		marqueePositionOne = 2000.0
