@@ -5,8 +5,6 @@ A realtime cryptocurrency market dashboard.
 
 Currently supported markets are Bitcoin/USD, Ethereum/USD, Litecoin/USD, Monero/USD, and Dash/USD.
 
-However, the option to select specific markets to show/hide will come in future releases.
-
 ## Installation
 
 You can download the latest release [here][1] (MacOS only at the moment).
@@ -22,6 +20,12 @@ Cryptobox is intended to be used on MacOS, specifically behind the dock.
 
 Like this:
 ![](art/behind-dock-demo.gif)
+
+## Still To Do
+
+1. Add the option to show/hide select specific markets.
+2. Add more market options.
+3. Make more customizable.
 
 ## License
 
