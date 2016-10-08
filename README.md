@@ -3,21 +3,28 @@ A realtime cryptocurrency market dashboard.
 
 ![](https://github.com/austinwade/cryptobox/blob/master/art/basic-demo.gif)
 
+Currently supported markets are Bitcoin/USD, Ethereum/USD, Litecoin/USD, Monero/USD, and Dash/USD.
+
+However, the option to select specific markets to show/hide will come in future releases.
+
 ## Installation
 
-You can download the latest release [here][1]. (MacOS only at the moment)
+You can download the latest release [here][1] (MacOS only at the moment).
 
 Or, if you would like to build the source yourself, simply:
 ```
-$ go get github.com/austinwade/cryptobox
+$ go get github.com/austinwade/go-cryptobox
 ```
 
 ## Usage
 
-Cryptobox was intended to be used on MacOS, specifically behind the dock.
+Cryptobox is intended to be used on MacOS, specifically behind the dock.
 
 Like this:
 ![](https://github.com/austinwade/cryptobox/blob/master/art/behind-dock-demo.gif)
 
+## License
+
+MIT
 
 [1]: https://github.com/austinwade/cryptobox/releases
