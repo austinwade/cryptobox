@@ -1,4 +1,21 @@
 # Cryptobox
-A realtime cryptocurrency value dashboard written in Go.
+A realtime cryptocurrency market dashboard.
 
 ![](https://github.com/austinwade/cryptobox/blob/master/demo.gif)
+
+## Installation
+
+You can download the latest release [here][1]. (MacOS only at the moment)
+
+Or, if you would like to build the source yourself, simply:
+```
+$ go get github.com/austinwade/cryptobox
+```
+
+[1]: https://github.com/austinwade/cryptobox/releases
+
+## Usage
+
+Cryptobox was intended to be used on MacOS, specifically behind the dock.
+
+Like this:
