@@ -1,7 +1,7 @@
 # Cryptobox
 A realtime cryptocurrency market dashboard.
 
-![](https://github.com/austinwade/cryptobox/blob/master/demo.gif)
+![](https://github.com/austinwade/cryptobox/blob/master/art/basic-demo.gif)
 
 ## Installation
 
@@ -12,10 +12,12 @@ Or, if you would like to build the source yourself, simply:
 $ go get github.com/austinwade/cryptobox
 ```
 
-[1]: https://github.com/austinwade/cryptobox/releases
-
 ## Usage
 
 Cryptobox was intended to be used on MacOS, specifically behind the dock.
 
 Like this:
+![](https://github.com/austinwade/cryptobox/blob/master/art/behind-dock-demo.gif)
+
+
+[1]: https://github.com/austinwade/cryptobox/releases
