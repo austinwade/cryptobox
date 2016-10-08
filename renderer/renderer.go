@@ -8,18 +8,52 @@ import ("github.com/goxjs/gl"
 	"strings"
 )
 
-var windowWidth int
-var windowHeight int
+var windowWidth = 1950
+var windowHeight = 70
+
 var context *nanovgo.Context
 var marqueePositionOne = 2000.0
-var marqueePositionTwo = 4750.0
+var marqueePositionTwo = 4625.0
+
+var blowup bool
+var premult bool
 
 func Init(width, height int) {
 	context, _ = nanovgo.NewContext(nanovgo.AntiAlias)
 
 	createFont(context)
+}
 
-	windowWidth, windowHeight = width, height
+func InitializeWindow() (*glfw.Window) {
+	err := glfw.Init(gl.ContextWatcher)
+
+	if err != nil {
+		panic(err)
+	}
+
+	window, _ := glfw.CreateWindow(windowWidth, windowHeight, "Cryptobox", nil, nil)
+
+	window.SetKeyCallback(key)
+	window.MakeContextCurrent()
+
+	Init(windowWidth, windowHeight)
+
+	glfw.SwapInterval(0)
+
+	return window
+}
+
+func key(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+
+	if key == glfw.KeyEscape && action == glfw.Press {
+		w.SetShouldClose(true)
+
+	} else if key == glfw.KeySpace && action == glfw.Press {
+		blowup = !blowup
+
+	} else if key == glfw.KeyP && action == glfw.Press {
+		premult = !premult
+	}
 }
 
 func Draw(window *glfw.Window, marketStats currency.Market) {
@@ -30,14 +64,14 @@ func Draw(window *glfw.Window, marketStats currency.Market) {
 	drawStats(marketStats, marqueePositionOne)
 	drawStats(marketStats, marqueePositionTwo)
 
-	marqueePositionOne -= 0.25
-	marqueePositionTwo -= 0.25
+	marqueePositionOne -= 2
+	marqueePositionTwo -= 2
 
-	if (marqueePositionOne < -3500) {
+	if (marqueePositionOne < -3250) {
 		marqueePositionOne = 2000.0
 	}
 
-	if (marqueePositionTwo < -3500) {
+	if (marqueePositionTwo < -3250) {
 		marqueePositionTwo = 2000.0
 	}
 
@@ -46,12 +80,12 @@ func Draw(window *glfw.Window, marketStats currency.Market) {
 
 func createFont(context *nanovgo.Context) {
 	sourcePath := "/Users/austin/Code/goWorkspace/src/github.com/austinwade/cryptobox/"
-	robotoRegularFileName := "Roboto-Medium.ttf"
+	fontFileName := "Roboto-Medium.ttf"
 
-	textFont := context.CreateFont("sans", sourcePath + robotoRegularFileName)
+	textFont := context.CreateFont("sans", sourcePath + fontFileName)
 
 	if textFont < 0 {
-		panic("Could not find font: " + robotoRegularFileName)
+		panic("Could not find font: " + fontFileName)
 	}
 }
 
