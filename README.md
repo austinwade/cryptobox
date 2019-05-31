@@ -21,6 +21,5 @@ Cryptobox is intended to be used on MacOS, specifically behind the dock.
 Like this:
 ![](art/behind-dock-demo.gif)
 
-## Releases
 
 [1]: https://github.com/hxnt/cryptobox/releases
