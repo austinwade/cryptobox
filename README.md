@@ -21,14 +21,6 @@ Cryptobox is intended to be used on MacOS, specifically behind the dock.
 Like this:
 ![](art/behind-dock-demo.gif)
 
-## Still To Do
+## Releases
 
-1. Add the option to show/hide select specific markets.
-2. Add more market options.
-3. Make more customizable.
-
-## License
-
-[MIT License](LICENSE.md) © Austin Wade
-
-[1]: https://github.com/austinwade/cryptobox/releases
+[1]: https://github.com/hxnt/cryptobox/releases
