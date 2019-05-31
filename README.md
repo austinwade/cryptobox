@@ -11,7 +11,7 @@ You can download the latest release [here][1] (MacOS only at the moment).
 
 Or, if you would like to build the source yourself, simply:
 ```
-$ go get github.com/austinwade/go-cryptobox
+$ go get github.com/hxnt/cryptobox
 ```
 
 ## Usage
